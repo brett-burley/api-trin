@@ -9,11 +9,7 @@ router.post('/create', async (req, res) => {
     const { text } = req.body;
     console.log('/create text', text);
 
-    const audio = await speech.toMp3(text);
-    console.log('audio created');
-
-    await files.saveMp3(text, audio.audioContent);
-    console.log('file saved');
+    await files.saveMp3(text);
 
     res.send(true);
   } catch(e) {
@@ -29,9 +25,12 @@ router.get('/mp3', async (req, res) => {
 
     const audio = await speech.toMp3(text);
 
-    if(audio.audioContent)
+    if(audio.audioContent) {
       console.log('SENDING AUDIO');
-    res.send(JSON.stringify(audio));
+      res.send(audio.audioContent);
+    }
+
+    res.send('');
   } catch(e) {
     console.error(e)
     res.status(500).send('to audio error');
